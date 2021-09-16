@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 
-namespace fake_vnexpress
+namespace VNEXPRESS
 {
     public class FilterConfig
     {

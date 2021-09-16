@@ -1,7 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
 
-namespace fake_vnexpress
+namespace VNEXPRESS
 {
     public class BundleConfig
     {

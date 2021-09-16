@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace fake_vnexpress.Areas.Dashboard
+namespace VNEXPRESS.Areas.Dashboard
 {
     public class DashboardAreaRegistration : AreaRegistration
     {
@@ -18,7 +18,7 @@ namespace fake_vnexpress.Areas.Dashboard
                 "Dashboard_default",
                 "Dashboard/{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "fake_vnexpress.Areas.Dashboard.Controllers" }
+                namespaces: new[] { "VNEXPRESS.Areas.Dashboard.Controllers" }
             );
         }
     }

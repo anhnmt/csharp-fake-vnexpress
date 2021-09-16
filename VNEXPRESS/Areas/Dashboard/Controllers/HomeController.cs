@@ -4,7 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 
-namespace fake_vnexpress.Areas.Dashboard.Controllers
+namespace VNEXPRESS.Areas.Dashboard.Controllers
 {
     public class HomeController : Controller
     {

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace fake_vnexpress
+namespace VNEXPRESS
 {
     public class RouteConfig
     {
@@ -17,7 +17,7 @@ namespace fake_vnexpress
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
-                namespaces: new[] { "fake_vnexpress.Controllers" }
+                namespaces: new[] { "VNEXPRESS.Controllers" }
             );
         }
     }
