@@ -23,7 +23,6 @@ namespace DAL.DataMapping
         [MinLength(6)]
         public string Password { get; set; }
 
-
         public int? Status { get; set; }
     }
 }

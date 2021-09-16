@@ -5,11 +5,6 @@ namespace VNEXPRESS
 {
     public class BundleConfig
     {
-        protected virtual void Application_Start()
-        {
-            BundleConfig.RegisterBundles(BundleTable.Bundles);
-        }
-
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
@@ -18,7 +13,7 @@ namespace VNEXPRESS
                         "~/Scripts/jquery-{version}.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
-                        "~/Scripts/jquery.validate*"));
+                        "~/Scripts/jquery.validate.min.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at https://modernizr.com to pick only the tests you need.

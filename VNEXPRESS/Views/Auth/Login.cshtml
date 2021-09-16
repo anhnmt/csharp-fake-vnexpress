@@ -13,42 +13,82 @@
     <title>Signin Template · Bootstrap v5.1</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="~/Content/bootstrap.min.css" rel="stylesheet" />
-    <link href="~/Content/signin.css" rel="stylesheet" />
+    @Styles.Render("~/Content/css")
+    <!-- Custom styles for this template -->
+    <link href="~/Content/signin.css" rel="stylesheet"/>
 
     <!-- Favicons -->
     <meta name="theme-color" content="#7952b3">
-
-    <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet">
 </head>
 <body class="text-center">
 
-    <main class="form-signin">
-        <form>
-            <img class="mb-4" src="~/Content/image/bootstrap-logo.svg" alt="" width="72" height="57">
-            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+<main class="form-signin">
+    <form method="post" id="formData">
+        <img class="mb-4" src="~/Content/image/bootstrap-logo.svg" alt="" width="72" height="57">
+        <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
 
-            <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email address</label>
-            </div>
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">Password</label>
-            </div>
+        <div class="has-feedback form-floating">
+            <label for="username">Username</label>
+            <input type="text" class="form-control" id="username" name="Username" placeholder="Username">
+        </div>
+        <div class="has-feedback form-floating">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" name="Password" placeholder="Password">
+        </div>
 
-            <div class="checkbox mb-3">
-                <label>
-                    <input type="checkbox" value="remember-me"> Remember me
-                </label>
-            </div>
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-            <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
-        </form>
-    </main>
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" value="remember-me"> Remember me
+            </label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+        <p class="mt-5 mb-3 text-muted">&copy; 2017–2021</p>
+    </form>
+</main>
 
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryval")
 
-
+<script>
+$(function () {
+    let validator = $("#formData").validate({
+        rules: {
+            Username: {
+                required: true,
+            },
+            Password: {
+                required: true,
+                minlength: 6,
+            }
+        },
+        ignore: [],
+        errorClass: "invalid-feedback",
+        errorPlacement: function (e, a) {
+            jQuery(a).after(e)
+        },
+        highlight: function (e) {
+            jQuery(e).closest(".form-group").removeClass("is-invalid").addClass("is-invalid")
+        },
+        success: function (e) {
+            jQuery(e).closest(".form-group").removeClass("is-invalid").addClass("is-valid")
+        },
+        submitHandler: function (form) {
+            $.ajax({
+                url: "@Url.Action("Login", "Auth")",
+                type: $(form).attr('method'),
+                data: $(form).serialize(),
+                success: function (res) {
+                    if (res.statusCode !== 200) {
+                        console.log(res.data);
+                        validator.showErrors(res.data);
+                    } else {
+                        window.location = "@Url.Action("Index", "Home", new {Area = "Dashboard"})";    
+                    }
+                },
+            });
+        },
+    });
+});
+</script>
 </body>
 </html>

@@ -9,8 +9,6 @@ namespace DAL.DataMapping
 {
     public class ApplicationDbContext : DbContext
     {
-
-
         public ApplicationDbContext() : base("name=DBConnectionString")
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Configuration>());
