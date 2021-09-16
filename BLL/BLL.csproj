@@ -5,11 +5,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{108CAB36-0AFC-469C-889B-427E6DB31FC6}</ProjectGuid>
+    <ProjectGuid>{F4D1A407-6F26-4E00-837B-184BDCCF21F3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DAL</RootNamespace>
-    <AssemblyName>DAL</AssemblyName>
+    <RootNamespace>BLL</RootNamespace>
+    <AssemblyName>BLL</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -43,6 +43,7 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,26 +52,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataMapping\ApplicationDbContext.cs" />
-    <Compile Include="DataMapping\BaseModel.cs" />
-    <Compile Include="DataMapping\Category.cs" />
-    <Compile Include="DataMapping\Post.cs" />
-    <Compile Include="DataMapping\User.cs" />
-    <Compile Include="Migrations\202109160856381_Initial.cs" />
-    <Compile Include="Migrations\202109160856381_Initial.designer.cs">
-      <DependentUpon>202109160856381_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="IRepositories\ICategoryRepository.cs" />
+    <Compile Include="IRepositories\IPostRepository.cs" />
+    <Compile Include="IRepositories\IRepository.cs" />
+    <Compile Include="Repositories\CategoryRepository.cs" />
+    <Compile Include="Repositories\PostRepository.cs" />
+    <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="IRepositories\IUserRepository.cs" />
+    <Compile Include="Repositories\UserRepository.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DAL\DAL.csproj">
+      <Project>{108CAB36-0AFC-469C-889B-427E6DB31FC6}</Project>
+      <Name>DAL</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\202109160856381_Initial.resx">
-      <DependentUpon>202109160856381_Initial.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
