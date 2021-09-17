@@ -8,6 +8,8 @@ using System.Web.Script.Serialization;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Linq;
+using BLL.Repositories;
+using DAL.DataMapping;
 using DAL.Models;
 using Newtonsoft.Json;
 using RestSharp;
@@ -17,6 +19,18 @@ namespace VNEXPRESS.Areas.Dashboard.Controllers
 {
     public class PostController : Controller
     {
+        private PostRepository postRepository = null;
+
+        public PostController()
+        {
+            this.postRepository = new PostRepository();
+        }
+
+        public PostController(PostRepository postRepository)
+        {
+            this.postRepository = postRepository;
+        }
+
         // GET
         public ActionResult Index()
         {
@@ -31,16 +45,26 @@ namespace VNEXPRESS.Areas.Dashboard.Controllers
             var json = JsonConvert.SerializeXmlNode(doc);
             var myDeserializedClass = JsonConvert.DeserializeObject<Root>(json);
 
-            var lst = myDeserializedClass.Rss.Channel.Item.Select(item => item.Link).ToList();
+            var lstPost = new List<Post>();
 
-            return Json(lst, JsonRequestBehavior.AllowGet);
+            myDeserializedClass.Rss.Channel.Item.ForEach(x =>
+            {
+                var post = new Post();
+                post.Title = x.Title;
+                post.Slug = x.Link;
+                post.Content = GetPostContent(x.Link);
 
-            // return Json(new
-            // {
-            //     statusCode = 200,
-            //     message = "Success",
-            //     data = json
-            // }, JsonRequestBehavior.AllowGet);
+                lstPost.Add(post);
+            });
+            
+            postRepository.AddRange(lstPost);
+
+            return Json(new
+            {
+                statusCode = 200,
+                message = "Success",
+                data = lstPost
+            }, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult ScanPost()
@@ -50,23 +74,37 @@ namespace VNEXPRESS.Areas.Dashboard.Controllers
             var request = new RestRequest(Method.GET);
             request.AddHeader("Content-Type", "application/json");
             var response = client.Execute(request);
-            
-            var rx = Regex.Match(response.Content, "<article class=\"fck_detail \">(.*)<\\/article>", RegexOptions.Singleline);
-            
+
+            var rx = Regex.Match(response.Content, "<article class=\"fck_detail \">(.*)<\\/article>",
+                RegexOptions.Singleline);
+
             var result = Regex.Replace(rx.Value, "<[^>]*>", "",
                 RegexOptions.IgnorePatternWhitespace,
                 TimeSpan.FromSeconds(.25));
-            
+
             result = Regex.Replace(result, @"^\s+$[\r\n]*", @"", RegexOptions.Multiline);
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
 
-            // return Json(new
-            // {
-            //     statusCode = 200,
-            //     message = "Success",
-            //     data = json
-            // }, JsonRequestBehavior.AllowGet);
+        public string GetPostContent(string postUrl)
+        {
+            var client = new RestClient(postUrl);
+            client.Timeout = -1;
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("Content-Type", "application/json");
+            var response = client.Execute(request);
+
+            var rx = Regex.Match(response.Content, "<article class=\"fck_detail \">(.*)<\\/article>",
+                RegexOptions.Singleline);
+
+            var result = Regex.Replace(rx.Value, "<[^>]*>", "",
+                RegexOptions.IgnorePatternWhitespace,
+                TimeSpan.FromSeconds(.25));
+
+            result = Regex.Replace(result, @"^\s+$[\r\n]*", @"", RegexOptions.Multiline);
+
+            return result;
         }
     }
 }
