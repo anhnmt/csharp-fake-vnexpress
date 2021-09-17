@@ -11,7 +11,7 @@ namespace DAL.DataMapping
     public class User : BaseModel
     {
         [Key]
-        public int ID { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string Name { get; set; }

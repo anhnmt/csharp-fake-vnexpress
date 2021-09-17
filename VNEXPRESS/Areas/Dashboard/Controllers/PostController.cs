@@ -40,7 +40,8 @@ namespace VNEXPRESS.Areas.Dashboard.Controllers
         public ActionResult ScanCategory()
         {
             var doc = new XmlDocument();
-            doc.Load("https://vnexpress.net/rss/the-gioi.rss");
+            doc.Load("https://vnexpress.net/rss/tin-moi-nhat.rss");
+            // doc.Load("https://vnexpress.net/rss/the-gioi.rss");
 
             var json = JsonConvert.SerializeXmlNode(doc);
             var myDeserializedClass = JsonConvert.DeserializeObject<Root>(json);
@@ -49,14 +50,19 @@ namespace VNEXPRESS.Areas.Dashboard.Controllers
 
             myDeserializedClass.Rss.Channel.Item.ForEach(x =>
             {
+                var slug = ConvertSlug(x.Link);
+
+                if (postRepository.CheckDuplicate(y => y.Slug == slug)) return;
+
                 var post = new Post();
                 post.Title = x.Title;
-                post.Slug = x.Link;
+                post.Slug = slug;
+                post.Description = RemoveTags(x.Description?.Section);
                 post.Content = GetPostContent(x.Link);
 
                 lstPost.Add(post);
             });
-            
+
             postRepository.AddRange(lstPost);
 
             return Json(new
@@ -78,11 +84,7 @@ namespace VNEXPRESS.Areas.Dashboard.Controllers
             var rx = Regex.Match(response.Content, "<article class=\"fck_detail \">(.*)<\\/article>",
                 RegexOptions.Singleline);
 
-            var result = Regex.Replace(rx.Value, "<[^>]*>", "",
-                RegexOptions.IgnorePatternWhitespace,
-                TimeSpan.FromSeconds(.25));
-
-            result = Regex.Replace(result, @"^\s+$[\r\n]*", @"", RegexOptions.Multiline);
+            var result = RemoveTags(rx.Value);
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -98,11 +100,27 @@ namespace VNEXPRESS.Areas.Dashboard.Controllers
             var rx = Regex.Match(response.Content, "<article class=\"fck_detail \">(.*)<\\/article>",
                 RegexOptions.Singleline);
 
-            var result = Regex.Replace(rx.Value, "<[^>]*>", "",
+            var result = RemoveTags(rx.Value);
+
+            return result;
+        }
+
+        public string RemoveTags(string text)
+        {
+            var result = Regex.Replace(text, "<[^>]*>", "",
                 RegexOptions.IgnorePatternWhitespace,
                 TimeSpan.FromSeconds(.25));
 
             result = Regex.Replace(result, @"^\s+$[\r\n]*", @"", RegexOptions.Multiline);
+
+            return result;
+        }
+
+        public string ConvertSlug(string text)
+        {
+            var result = Regex.Replace(text, "^https:\\/\\/vnexpress.net\\/(.*?)-([0-9]+).html$", "$1",
+                RegexOptions.IgnorePatternWhitespace,
+                TimeSpan.FromSeconds(.25));
 
             return result;
         }

@@ -1,7 +1,9 @@
 ﻿using DAL.Migrations;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure.Annotations;
 using System.Linq;
 using System.Web;
 
@@ -16,7 +18,13 @@ namespace DAL.DataMapping
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Category>()
+                .HasIndex(b => b.Slug)
+                .IsUnique();
 
+            modelBuilder.Entity<Post>()
+                .HasIndex(b => b.Slug)
+                .IsUnique();
         }
 
         public override int SaveChanges()
@@ -29,11 +37,11 @@ namespace DAL.DataMapping
 
             foreach (var entityEntry in entries)
             {
-                ((BaseModel)entityEntry.Entity).UpdatedAt = DateTime.Now;
+                ((BaseModel) entityEntry.Entity).UpdatedAt = DateTime.Now;
 
                 if (entityEntry.State == EntityState.Added)
                 {
-                    ((BaseModel)entityEntry.Entity).CreatedAt = DateTime.Now;
+                    ((BaseModel) entityEntry.Entity).CreatedAt = DateTime.Now;
                 }
             }
 

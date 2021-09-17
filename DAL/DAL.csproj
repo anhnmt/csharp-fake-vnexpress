@@ -82,22 +82,22 @@
     <Compile Include="DataMapping\Category.cs" />
     <Compile Include="DataMapping\Post.cs" />
     <Compile Include="DataMapping\User.cs" />
-    <Compile Include="Migrations\202109160856381_Initial.cs" />
-    <Compile Include="Migrations\202109160856381_Initial.Designer.cs">
-      <DependentUpon>202109160856381_Initial.cs</DependentUpon>
+    <Compile Include="Migrations\202109170933301_Initial.cs" />
+    <Compile Include="Migrations\202109170933301_Initial.designer.cs">
+      <DependentUpon>202109170933301_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\RssModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202109160856381_Initial.resx">
-      <DependentUpon>202109160856381_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202109170933301_Initial.resx">
+      <DependentUpon>202109170933301_Initial.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
